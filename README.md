@@ -32,7 +32,7 @@ const routes = {
 }
 
 const app = merry()
-app.use(render(cache(routes, (route) => client.toString(route))))
+app.use(cache(routes, (route) => client.toString(route)))
 app.start()
 ```
 
@@ -42,11 +42,10 @@ Create a new render function that takes a callback and returns a middleware
 function. The callback should return a string synchronously. The middleware
 function has the signature of `(req, res, next)`.
 
-### handler = cache(routes, handler(route))
-Cache routes into a Node buffer. Takes an object containing a `.routes` array
+### middleware = cache(routes, handler(route))
+Cache routes into Node buffers. Takes an object containing a `.routes` array
 of routes, and a `.default` value for the default route to match if no other
-routes could be matched. Can be passed as the `handler` into `render(handler)`
-to turn it into middleware.
+routes could be matched.
 
 ## Installation
 ```sh

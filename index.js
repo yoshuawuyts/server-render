@@ -1,6 +1,13 @@
 const hyperstream = require('hyperstream')
 const index = require('simple-html-index')
 const assert = require('assert')
+const xtend = require('xtend')
+
+const defaultOpts = {
+  entry: 'bundle.js',
+  css: 'bundle.css',
+  favicon: true
+}
 
 module.exports = serverRender
 
@@ -15,6 +22,8 @@ function serverRender (opts, handler) {
   assert.equal(typeof opts, 'object', 'server-render: opts should be a function')
   assert.equal(typeof handler, 'function', 'server-render: handler should be a function')
 
+  const indexOpts = xtend(defaultOpts, opts)
+
   // call middlewarereadme
   // (obj, obj, fn) -> null
   return function (req, res, next) {
@@ -23,6 +32,6 @@ function serverRender (opts, handler) {
     const html = handler(req.url)
     const hs = hyperstream({ 'body': { _appendHtml: html } })
 
-    index(opts).pipe(hs).pipe(res)
+    index(indexOpts).pipe(hs).pipe(res)
   }
 }
