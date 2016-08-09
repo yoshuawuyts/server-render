@@ -17,7 +17,10 @@
     "buffer"
   ],
   "license": "MIT",
-  "dependencies": {},
+  "dependencies": {
+    "hyperstream": "^1.2.2",
+    "simple-html-index": "^1.4.0"
+  },
   "devDependencies": {
     "dependency-check": "^2.6.0",
     "istanbul": "^0.4.4",
