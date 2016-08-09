@@ -20,7 +20,7 @@ function serverRender (opts, handler) {
     opts = {}
   }
 
-  assert.equal(typeof opts, 'object', 'server-render: opts should be a function')
+  assert.equal(typeof opts, 'object', 'server-render: opts should be an object')
   assert.equal(typeof handler, 'function', 'server-render: handler should be a function')
 
   const indexOpts = xtend(defaultOpts, opts)
