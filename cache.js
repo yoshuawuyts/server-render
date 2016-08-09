@@ -42,10 +42,10 @@ function serverRender (opts, routes, handler) {
     res.setHeader('Content-Type', 'text/html; charset=utf-8')
 
     if (cache[req.url]) {
-      cache[req.url].duplicate().pipe(res)
+      pump(cache[req.url].duplicate(), res)
     } else {
       res.statusCode = 404
-      defaultRoute.duplicate().pipe(res)
+      pump(defaultRoute.duplicate(), res)
     }
   }
 

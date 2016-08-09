@@ -18,7 +18,9 @@
   ],
   "license": "MIT",
   "dependencies": {
+    "bl": "^1.1.2",
     "hyperstream": "^1.2.2",
+    "pump": "^1.0.1",
     "simple-html-index": "^1.4.0",
     "xtend": "^4.0.1"
   },

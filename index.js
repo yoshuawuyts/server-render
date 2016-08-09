@@ -2,6 +2,7 @@ const hyperstream = require('hyperstream')
 const index = require('simple-html-index')
 const assert = require('assert')
 const xtend = require('xtend')
+const pump = require('pump')
 
 const defaultOpts = {
   entry: 'bundle.js',
@@ -32,6 +33,6 @@ function serverRender (opts, handler) {
     const html = handler(req.url)
     const hs = hyperstream({ 'body': { _appendHtml: html } })
 
-    index(indexOpts).pipe(hs).pipe(res)
+    pump(index(indexOpts), hs, res)
   }
 }
