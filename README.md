@@ -17,7 +17,7 @@ app.use(render((route) => client.toString(route)))
 app.start()
 ```
 
-## Caching [tbi]
+## Caching
 Sometimes you know the paths you're going to render up front, and want to cache
 them in a Node buffer so the reponse times are as fast as they can be.
 ```js
