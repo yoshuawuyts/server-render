@@ -4,6 +4,9 @@ const assert = require('assert')
 const xtend = require('xtend')
 const pump = require('pump')
 
+const contentType = 'text/html; charset=utf-8'
+const contentCheck = new RegExp('text/html')
+
 const defaultOpts = {
   entry: 'bundle.js',
   css: 'bundle.css',
@@ -28,7 +31,8 @@ function serverRender (opts, handler) {
   // call middlewarereadme
   // (obj, obj, fn) -> null
   return function (req, res, next) {
-    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    if (!contentCheck.test(req.headers['accept'])) return next()
+    res.setHeader('Content-Type', contentType)
 
     const html = handler(req.url)
     const hs = hyperstream({ 'body': { _appendHtml: html } })

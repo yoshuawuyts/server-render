@@ -5,6 +5,9 @@ const xtend = require('xtend')
 const pump = require('pump')
 const bl = require('bl')
 
+const contentType = 'text/html; charset=utf-8'
+const contentCheck = new RegExp('text/html')
+
 const defaultOpts = {
   entry: 'bundle.js',
   css: 'bundle.css',
@@ -39,7 +42,8 @@ function serverRender (opts, routes, handler) {
   // call middlewarereadme
   // (obj, obj, fn) -> null
   return function (req, res, next) {
-    res.setHeader('Content-Type', 'text/html; charset=utf-8')
+    if (!contentCheck.test(req.headers['accept'])) return next()
+    res.setHeader('Content-Type', contentType)
 
     if (cache[req.url]) {
       pump(cache[req.url].duplicate(), res)
