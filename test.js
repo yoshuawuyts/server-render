@@ -1,13 +1,13 @@
-const getPort = require('get-server-port')
-const concat = require('concat-stream')
-const series = require('run-series')
-const http = require('http')
-const test = require('tape')
+var getPort = require('get-server-port')
+var concat = require('concat-stream')
+var series = require('run-series')
+var http = require('http')
+var test = require('tape')
 
-const cache = require('./cache')
-const render = require('./')
+var cache = require('./cache')
+var render = require('./')
 
-test('server-render', (t) => {
+test('server-render', function (t) {
   t.test('should assert input types', function (t) {
     t.plan(3)
     t.throws(render, /function/)
@@ -15,19 +15,23 @@ test('server-render', (t) => {
     t.throws(render.bind(null, 123, 456), /object/)
   })
 
-  t.test('should create middleware for an http server', (t) => {
+  t.test('should create middleware for an http server', function (t) {
     t.plan(4)
-    const expected = '<main>hey</main>'
-    const renderer = render((route) => {
+    var expected = '<main>hey</main>'
+    var renderer = render(function (route) {
       t.equal(route, '/foo')
       return expected
     })
-    const server = http.createServer(renderer)
+    var server = http.createServer(renderer)
     server.listen()
-    const port = getPort(server)
-    http.get(`http://localhost:${port}/foo`, (res) => {
+    var port = getPort(server)
+    var opts = {
+      headers: { accept: 'text/html' },
+      href: `http://localhost:${port}/foo`
+    }
+    http.get(opts, function (res) {
       res.pipe(concat(function (buf) {
-        const str = String(buf)
+        var str = String(buf)
         t.ok(/text\/html/.test(res.headers['content-type']), 'content type')
         t.ok(/DOCTYPE html/.test(str), 'is html')
         t.ok(new RegExp(expected).test(str), 'contains expected')
@@ -37,8 +41,8 @@ test('server-render', (t) => {
   })
 })
 
-test('server-render/cache', (t) => {
-  t.test('should assert input types', (t) => {
+test('server-render/cache', function (t) {
+  t.test('should assert input types', function (t) {
     t.plan(4)
     t.throws(cache, /function/)
     t.throws(cache.bind(null, 123), /function/)
@@ -46,30 +50,30 @@ test('server-render/cache', (t) => {
     t.throws(cache.bind(null, 123, {}, 123), /function/)
   })
 
-  t.test('should create cached middleware for an http server', (t) => {
+  t.test('should create cached middleware for an http server', function (t) {
     t.plan(7)
-    const expected = '<main>hey</main>'
-    const routes = {
+    var expected = '<main>hey</main>'
+    var routes = {
       routes: [ '/foo', '/bar' ]
     }
-    const renderer = cache(routes, (route) => {
+    var renderer = cache(routes, function (route) {
       if (route === '/foo' || route === '/bar') {
         return expected
       }
     })
-    const server = http.createServer(renderer)
+    var server = http.createServer(renderer)
     server.listen()
-    const port = getPort(server)
+    var port = getPort(server)
 
-    series([callfoo, callbar], (err) => {
+    series([callfoo, callbar], function (err) {
       t.ifError(err, 'no err')
       server.close()
     })
 
     function callfoo (done) {
-      http.get(`http://localhost:${port}/foo`, (res) => {
+      http.get(`http://localhost:${port}/foo`, function (res) {
         res.pipe(concat(function (buf) {
-          const str = String(buf)
+          var str = String(buf)
           t.ok(/text\/html/.test(res.headers['content-type']), 'content type')
           t.ok(/DOCTYPE html/.test(str), 'is html')
           t.ok(new RegExp(expected).test(str), 'contains expected')
@@ -79,9 +83,9 @@ test('server-render/cache', (t) => {
     }
 
     function callbar (done) {
-      http.get(`http://localhost:${port}/bar`, (res) => {
+      http.get(`http://localhost:${port}/bar`, function (res) {
         res.pipe(concat(function (buf) {
-          const str = String(buf)
+          var str = String(buf)
           t.ok(/text\/html/.test(res.headers['content-type']), 'content type')
           t.ok(/DOCTYPE html/.test(str), 'is html')
           t.ok(new RegExp(expected).test(str), 'contains expected')
@@ -91,34 +95,34 @@ test('server-render/cache', (t) => {
     }
   })
 
-  t.test('should call a default route if none other is found', (t) => {
+  t.test('should call a default route if none other is found', function (t) {
     t.plan(7)
-    const wrong = '<main>hey</main>'
-    const expected = '<main>hey</main>'
-    const routes = {
+    var wrong = '<main>hey</main>'
+    var expected = '<main>hey</main>'
+    var routes = {
       routes: [ '/bar' ],
       default: '/404'
     }
-    const renderer = cache(routes, (route) => {
+    var renderer = cache(routes, function (route) {
       if (route === '/404') {
         return expected
       } else {
         return wrong
       }
     })
-    const server = http.createServer(renderer)
+    var server = http.createServer(renderer)
     server.listen()
-    const port = getPort(server)
+    var port = getPort(server)
 
-    series([call404, callbar], (err) => {
+    series([call404, callbar], function (err) {
       t.ifError(err, 'no err')
       server.close()
     })
 
     function call404 (done) {
-      http.get(`http://localhost:${port}/defnot404`, (res) => {
+      http.get(`http://localhost:${port}/defnot404`, function (res) {
         res.pipe(concat(function (buf) {
-          const str = String(buf)
+          var str = String(buf)
           t.ok(/text\/html/.test(res.headers['content-type']), 'content type')
           t.ok(/DOCTYPE html/.test(str), 'is html')
           t.ok(new RegExp(expected).test(str), 'contains expected')
@@ -127,9 +131,9 @@ test('server-render/cache', (t) => {
       })
     }
     function callbar (done) {
-      http.get(`http://localhost:${port}/bar`, (res) => {
+      http.get(`http://localhost:${port}/bar`, function (res) {
         res.pipe(concat(function (buf) {
-          const str = String(buf)
+          var str = String(buf)
           t.ok(/text\/html/.test(res.headers['content-type']), 'content type')
           t.ok(/DOCTYPE html/.test(str), 'is html')
           t.ok(new RegExp(wrong).test(str), 'contains expected')

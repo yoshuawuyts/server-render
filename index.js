@@ -1,13 +1,13 @@
-const hyperstream = require('hyperstream')
-const index = require('simple-html-index')
-const assert = require('assert')
-const xtend = require('xtend')
-const pump = require('pump')
+var hyperstream = require('hyperstream')
+var index = require('simple-html-index')
+var assert = require('assert')
+var xtend = require('xtend')
+var pump = require('pump')
 
-const contentType = 'text/html; charset=utf-8'
-const contentCheck = new RegExp('text/html')
+var contentType = 'text/html; charset=utf-8'
+var contentCheck = new RegExp('text/html')
 
-const defaultOpts = {
+var defaultOpts = {
   entry: 'bundle.js',
   css: 'bundle.css',
   favicon: true
@@ -26,7 +26,7 @@ function serverRender (opts, handler) {
   assert.equal(typeof opts, 'object', 'server-render: opts should be an object')
   assert.equal(typeof handler, 'function', 'server-render: handler should be a function')
 
-  const indexOpts = xtend(defaultOpts, opts)
+  var indexOpts = xtend(defaultOpts, opts)
 
   // call middlewarereadme
   // (obj, obj, fn) -> null
@@ -34,8 +34,8 @@ function serverRender (opts, handler) {
     if (!contentCheck.test(req.headers['accept'])) return next()
     res.setHeader('Content-Type', contentType)
 
-    const html = handler(req.url)
-    const hs = hyperstream({ 'body': { _appendHtml: html } })
+    var html = handler(req.url)
+    var hs = hyperstream({ 'body': { _appendHtml: html } })
 
     pump(index(indexOpts), hs, res)
   }

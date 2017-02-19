@@ -8,12 +8,14 @@ HTML server rendering middleware. Detects if an incoming request is requesting
 ## Usage
 Assuming the client is a [choo](https://github.com/yoshuawuyts/choo) app:
 ```js
-const render = require('server-render')
-const merry = require('merry')
-const client = require('./client')
+var render = require('server-render')
+var merry = require('merry')
+var client = require('./client')
 
-const app = merry()
-app.use(render((route) => client.toString(route)))
+var app = merry()
+app.use(render(function (route) {
+  return client.toString(route))
+})
 app.start()
 ```
 
@@ -21,18 +23,20 @@ app.start()
 Sometimes you know the paths you're going to render up front, and want to cache
 them in a Node buffer so the reponse times are as fast as they can be.
 ```js
-const cache = require('server-render/cache')
-const render = require('server-render')
-const merry = require('merry')
-const client = require('./client')
+var cache = require('server-render/cache')
+var render = require('server-render')
+var merry = require('merry')
+var client = require('./client')
 
-const routes = {
+var routes = {
   default: '/404',
   routes: [ '/', '/bar', '/bar/baz', '/bar/:foobar' ]
 }
 
-const app = merry()
-app.use(cache(routes, (route) => client.toString(route)))
+var app = merry()
+app.use(cache(routes, function (route) {
+  return client.toString(route))
+})
 app.start()
 ```
 

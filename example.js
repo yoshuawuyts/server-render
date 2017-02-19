@@ -1,8 +1,8 @@
-const cache = require('./cache')
-const http = require('http')
+var cache = require('./cache')
+var http = require('http')
 
-const routes = { routes: [ '/' ] }
-const render = cache(routes, function (route) {
+var routes = { routes: [ '/' ] }
+var render = cache(routes, function (route) {
   return '<main>hey</main>'
 })
 
